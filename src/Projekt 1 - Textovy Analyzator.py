@@ -25,3 +25,25 @@ other freshwater genera and herring similar to those
 in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.
 ''']
+
+"""
+Projekt 1 - Textový analyzátor.py
+
+author: David Heczko
+email: heczko.david@gmail.com
+discord: ellaniuss
+
+"""
+registered_users = {'bob': '123', 'ann': 'pass123', 'mike': 'password123', 'liz': 'pass123'}
+username = str(input("Username: "))
+password = str(input("Password: "))
+
+logged_in = False
+if username in registered_users:
+    if registered_users.get(username) == password:
+        print(f'Hello to the app, {username}!')
+        logged_in = True
+else:
+    print(f'Username or Password is incorrect. Program will be terminated.')
+    logged_in = False
+    exit()
