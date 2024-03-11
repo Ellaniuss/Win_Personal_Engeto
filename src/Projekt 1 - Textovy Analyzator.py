@@ -47,3 +47,48 @@ else:
     print(f'Username or Password is incorrect. Program will be terminated.')
     logged_in = False
     exit()
+
+text_select = int(input('Please choose text for analysis (1 - 3): '))
+valid_choice = False
+
+word_count = 0
+word_istitle = 0
+word_isupper = 0
+word_islower = 0
+number_count = 0
+total_sum = 0
+
+if text_select not in range(0, 3):
+    print('Selected text does not exist. Program will be terminated.')
+    valid_choice = False
+    exit()
+elif text_select.isalpha():
+    print('Selection needs to be number between 1 and 3. Program will be terminated.')
+    valid_choice = False
+    exit()
+else:
+    valid_choice = True
+
+if valid_choice:
+    index = text_select - 1
+    sentence = texts[index]
+    for word in sentence:
+        word_count = word_count + 1
+    for word in sentence:
+        if word.istitle():
+            word_istitle = word_istitle + 1
+        elif word.isupper():
+            word_isupper = word_isupper + 1
+        elif word.islower():
+            word_islower = word_islower + 1
+        elif word.isdigit():
+            number_count = number_count + 1
+            total_sum = total_sum + int(word)
+print(
+    f'There are {word_count} words in the selected text.\n'
+    f'There are {word_istitle} titlecase words. \n'
+    f'There are {word_isupper} uppercase words. \n'
+    f'There are {word_islower} lowercase words. \n'
+    f'There are {number_count} numeric strigns. \n'
+    f'The sum of all the numbers is {total_sum}'
+    )
