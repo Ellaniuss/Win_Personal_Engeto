@@ -63,14 +63,14 @@ if not text_select.isdigit():
 
 elif text_select.isdigit():
     text_select = int(text_select)
-    if text_select not in range(1,4):
+    if text_select not in range(1, 4):
         print('Selected text does not exist. Program will be terminated.')
         exit()
 else:
     text_select = int(text_select)
 
-index = text_select - 1
-sentence = texts[index].split()
+choice = texts[(text_select - 1)]
+sentence = choice.split()
 
 for word in sentence:
     word_count = word_count + 1
