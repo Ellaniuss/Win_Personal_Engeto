@@ -48,15 +48,15 @@ else:
     logged_in = False
     exit()
 
-text_select = int(input('Please choose text for analysis (1 - 3): '))
-valid_choice = False
-
 word_count = 0
 word_istitle = 0
 word_isupper = 0
 word_islower = 0
 number_count = 0
 total_sum = 0
+
+text_select = int(input('Please choose text for analysis (1 - 3): '))
+valid_choice = False
 
 if text_select not in range(0, 3):
     print('Selected text does not exist. Program will be terminated.')
@@ -71,7 +71,7 @@ else:
 
 if valid_choice:
     index = text_select - 1
-    sentence = texts[index]
+    sentence = texts[index].split()
     for word in sentence:
         word_count = word_count + 1
     for word in sentence:
