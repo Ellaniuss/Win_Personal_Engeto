@@ -55,7 +55,7 @@ word_islower = 0
 number_count = 0
 total_sum = 0
 
-text_select = int(input('Please choose text for analysis (1 - 3): '))
+text_select = input('Please choose text for analysis (1 - 3): ')
 valid_choice = False
 
 if text_select not in range(0, 3):
