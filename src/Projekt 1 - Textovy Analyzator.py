@@ -95,3 +95,10 @@ print(
     f'There are {number_count} numeric strigns. \n'
     f'The sum of all the numbers is {total_sum}'
     )
+
+len_count = dict()
+for word in sentence:
+    if len(word) not in word_count:
+        word_count[len(word)] = 1
+    else:
+        word_count[len(word)] = word_count[len(word)] + 1
