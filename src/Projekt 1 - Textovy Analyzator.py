@@ -93,8 +93,6 @@ for word in sentence:  # created loop to analyse text
         number_count = number_count + 1
         total_sum = total_sum + int(word)
 
-
-
 print(
     f'There are {word_count} words in the selected text.\n'
     f'There are {word_istitle} titlecase words. \n'
@@ -104,10 +102,9 @@ print(
     f'The sum of all the numbers is {total_sum}'
     )
 print(spacer)
-# created dictionary for lenghts of words
-len_count = dict()
-# created for loop to save lenghts to the created dictionary
-for word in sentence:
+
+len_count = dict()  # created dictionary for lenghts of words
+for word in sentence:  # created for loop to save lenghts to the created dictionary
     word_len = len(word)
     if word_len not in len_count:
         len_count[word_len] = 1
