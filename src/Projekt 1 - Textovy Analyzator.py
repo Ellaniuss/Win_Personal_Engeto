@@ -57,13 +57,17 @@ total_sum = 0
 
 text_select = input('Please choose text for analysis (1 - 3): ')
 
-
-if text_select not in range(0, 3):
-    print('Selected text does not exist. Program will be terminated.')
-    exit()
-elif text_select.isalpha():
+if not text_select.isdigit():
     print('Selection needs to be number between 1 and 3. Program will be terminated.')
     exit()
+
+elif text_select.isdigit():
+    text_select = int(text_select)
+    if text_select not in range(1,4):
+        print('Selected text does not exist. Program will be terminated.')
+        exit()
+else:
+    text_select = int(text_select)
 
 
 
