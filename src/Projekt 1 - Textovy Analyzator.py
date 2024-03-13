@@ -84,6 +84,8 @@ for word in sentence:
     elif word.isdigit():
         number_count = number_count + 1
         total_sum = total_sum + int(word)
+
+
 print(
     f'There are {word_count} words in the selected text.\n'
     f'There are {word_istitle} titlecase words. \n'
