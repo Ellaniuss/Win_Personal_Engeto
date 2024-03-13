@@ -56,20 +56,17 @@ number_count = 0
 total_sum = 0
 
 text_select = input('Please choose text for analysis (1 - 3): ')
-valid_choice = False
+
 
 if text_select not in range(0, 3):
     print('Selected text does not exist. Program will be terminated.')
-    valid_choice = False
     exit()
 elif text_select.isalpha():
     print('Selection needs to be number between 1 and 3. Program will be terminated.')
-    valid_choice = False
     exit()
-else:
-    valid_choice = True
 
-if valid_choice:
+
+
     index = text_select - 1
     sentence = texts[index].split()
     for word in sentence:
