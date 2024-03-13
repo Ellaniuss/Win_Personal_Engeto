@@ -107,7 +107,7 @@ len_count = dict()
 for word in sentence:
     word_len = len(word)
     if word_len not in word_count:
-        word_count[word_len)] = 1
+        word_count[word_len] = 1
     else:
         word_count[word_len] += 1
 
