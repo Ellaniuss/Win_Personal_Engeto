@@ -39,6 +39,8 @@ registered_users = {'bob': '123', 'ann': 'pass123', 'mike': 'password123', 'liz'
 username = str(input("Username: "))
 password = str(input("Password: "))
 
+print(spacer)
+
 logged_in = False
 if username in registered_users:
     if registered_users.get(username) == password:
@@ -48,6 +50,7 @@ else:
     print(f'Username or Password is incorrect. Program will be terminated.')
     logged_in = False
     exit()
+print(spacer)
 
 word_count = 0
 word_istitle = 0
@@ -57,7 +60,7 @@ number_count = 0
 total_sum = 0
 
 text_select = input('Please choose text for analysis (1 - 3): ')
-
+print(spacer)
 if not text_select.isdigit():
     print('Selection needs to be number between 1 and 3. Program will be terminated.')
     exit()
@@ -69,6 +72,8 @@ elif text_select.isdigit():
         exit()
 else:
     text_select = int(text_select)
+
+print(spacer)
 
 choice = texts[(text_select - 1)]
 sentence = choice.split()
@@ -95,13 +100,16 @@ print(
     f'There are {number_count} numeric strigns. \n'
     f'The sum of all the numbers is {total_sum}'
     )
+print(spacer)
 
 len_count = dict()
+
 for word in sentence:
-    if len(word) not in word_count:
-        word_count[len(word)] = 1
+    word_len = len(word)
+    if word_len not in word_count:
+        word_count[word_len)] = 1
     else:
-        word_count[len(word)] = word_count[len(word)] + 1
+        word_count[word_len] += 1
 
 print(
     f'{"LEN":<3}| {"OCCURENCES":<20}| {"Nr.":<5}'
