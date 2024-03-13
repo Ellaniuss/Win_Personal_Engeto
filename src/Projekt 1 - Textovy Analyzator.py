@@ -116,5 +116,5 @@ print(
     f'\n'
     f'{spacer:}'
     )
-for ln, occur in word_count.items():
+for ln, occur in len_count.items():
     print(f'{ln:<3}| {"*" * occur:<20}| {occur:<5}')
