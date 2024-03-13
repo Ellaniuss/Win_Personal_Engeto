@@ -34,6 +34,7 @@ email: heczko.david@gmail.com
 discord: ellaniuss
 
 """
+spacer = ('-' * 42)
 registered_users = {'bob': '123', 'ann': 'pass123', 'mike': 'password123', 'liz': 'pass123'}
 username = str(input("Username: "))
 password = str(input("Password: "))
