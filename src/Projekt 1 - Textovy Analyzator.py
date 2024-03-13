@@ -69,22 +69,21 @@ elif text_select.isdigit():
 else:
     text_select = int(text_select)
 
+index = text_select - 1
+sentence = texts[index].split()
 
-
-    index = text_select - 1
-    sentence = texts[index].split()
-    for word in sentence:
-        word_count = word_count + 1
-    for word in sentence:
-        if word.istitle():
-            word_istitle = word_istitle + 1
-        elif word.isupper():
-            word_isupper = word_isupper + 1
-        elif word.islower():
-            word_islower = word_islower + 1
-        elif word.isdigit():
-            number_count = number_count + 1
-            total_sum = total_sum + int(word)
+for word in sentence:
+    word_count = word_count + 1
+for word in sentence:
+    if word.istitle():
+        word_istitle = word_istitle + 1
+    elif word.isupper():
+        word_isupper = word_isupper + 1
+    elif word.islower():
+        word_islower = word_islower + 1
+    elif word.isdigit():
+        number_count = number_count + 1
+        total_sum = total_sum + int(word)
 print(
     f'There are {word_count} words in the selected text.\n'
     f'There are {word_istitle} titlecase words. \n'
