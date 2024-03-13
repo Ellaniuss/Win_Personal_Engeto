@@ -102,3 +102,11 @@ for word in sentence:
         word_count[len(word)] = 1
     else:
         word_count[len(word)] = word_count[len(word)] + 1
+
+print(
+    f'{"LEN":<3}| {"OCCURENCES":<20}| {"Nr.":<5}'
+    f'\n'
+    f'{spacer:}'
+    )
+for ln, occur in word_count.items():
+    print(f'{ln:<3}| {"*" * occur:<20}| {occur:<5}')
