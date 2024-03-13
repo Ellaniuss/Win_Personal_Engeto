@@ -106,10 +106,10 @@ len_count = dict()
 
 for word in sentence:
     word_len = len(word)
-    if word_len not in word_count:
-        word_count[word_len] = 1
+    if word_len not in len_count:
+        len_count[word_len] = 1
     else:
-        word_count[word_len] += 1
+        len_count[word_len] += 1
 
 print(
     f'{"LEN":<3}| {"OCCURENCES":<20}| {"Nr.":<5}'
