@@ -49,9 +49,11 @@ if username in registered_users:
         print(f'Hello to the app, {username}!')
     else:
         print(f'Username or Password is incorrect. Program will be terminated.')
+        exit()
 else:
     print(f'Username or Password is incorrect. Program will be terminated.')
     exit()
+
 print(spacer)
 # created empty variables for text analysis
 word_count = 0
