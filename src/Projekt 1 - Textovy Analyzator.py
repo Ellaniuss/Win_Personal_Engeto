@@ -42,15 +42,13 @@ username = input("Username: ")
 password = input("Password: ")
 
 print(spacer)
+
 '#Created check of username and password validity'
-logged_in = False
 if username in registered_users:
     if registered_users.get(username) == password:
         print(f'Hello to the app, {username}!')
-        logged_in = True
 else:
     print(f'Username or Password is incorrect. Program will be terminated.')
-    logged_in = False
     exit()
 print(spacer)
 # created empty variables for text analysis
