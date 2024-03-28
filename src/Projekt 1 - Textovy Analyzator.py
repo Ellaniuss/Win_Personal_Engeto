@@ -83,16 +83,29 @@ choice = texts[(text_select - 1)]  # created variable "choice" to convert input 
 sentence = choice.split()  # created list of each word in text on index selected by input through "choice" variable
 
 for word in sentence:  # created loop to analyse text
-    word_count = word_count + 1
-    if word.istitle():
-        word_istitle = word_istitle + 1
-    elif word.isupper():
-        word_isupper = word_isupper + 1
-    elif word.islower():
-        word_islower = word_islower + 1
-    elif word.isdigit():
-        number_count = number_count + 1
-        total_sum = total_sum + int(word)
+    if word.isalpha():  # looking only for words
+        word_count += 1  # counting all words, following with other operations with words
+        if word.istitle():
+            word_istitle += 1
+        elif word.isupper():
+            word_isupper += 1
+        elif word.islower():
+            word_islower += 1
+        elif word.isdigit():
+            number_count += 1
+            total_sum += int(word)
+    elif word.isdigit():  # looking only for numbers
+        number_count += 1  # counting all numbers
+        total_sum += int(word)  # counting total sum of so far found numbers
+    else:  # looking for combination of words and numbers
+        number = ''
+        for char in word:
+            if char.isdigit():
+                number += char
+        if number:
+            number = int(number)
+            number_count += 1
+            total_sum += number
 
 print(
     f'There are {word_count} words in the selected text.\n'
