@@ -38,8 +38,8 @@ discord: ellaniuss
 spacer = ('-' * 42)
 # Created directory with usernames and passwored that are allowed. Added input commands for username and password
 registered_users = {'bob': '123', 'ann': 'pass123', 'mike': 'password123', 'liz': 'pass123'}
-username = str(input("Username: "))
-password = str(input("Password: "))
+username = input("Username: ")
+password = input("Password: ")
 
 print(spacer)
 '#Created check of username and password validity'
