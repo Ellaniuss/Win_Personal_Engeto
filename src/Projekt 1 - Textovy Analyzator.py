@@ -45,8 +45,10 @@ print(spacer)
 
 '#Created check of username and password validity'
 if username in registered_users:
-    if registered_users.get(username) == password:
+    if registered_users[username] == password:
         print(f'Hello to the app, {username}!')
+    else:
+        print(f'Username or Password is incorrect. Program will be terminated.')
 else:
     print(f'Username or Password is incorrect. Program will be terminated.')
     exit()
