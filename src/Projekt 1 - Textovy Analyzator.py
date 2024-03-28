@@ -82,9 +82,8 @@ print(spacer)
 choice = texts[(text_select - 1)]  # created variable "choice" to convert input number to index
 sentence = choice.split()  # created list of each word in text on index selected by input through "choice" variable
 
-for word in sentence:  # created loops to check number of words in chosen text
-    word_count = word_count + 1
 for word in sentence:  # created loop to analyse text
+    word_count = word_count + 1
     if word.istitle():
         word_istitle = word_istitle + 1
     elif word.isupper():
