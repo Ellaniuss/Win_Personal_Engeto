@@ -118,5 +118,5 @@ print(
     f'{spacer:}'
     )
 # loop for print of simple graph using found data
-for ln, occur in len_count.items():
+for ln, occur in sorted(len_count.items()):
     print(f'{ln:<3}| {"*" * occur:<20}| {occur:<5}')
