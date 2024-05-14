@@ -14,7 +14,7 @@ def random_generator():
     gen_number = ""
     while len(gen_number) < 4:
         digit = str(random.randint(1, 9))
-        if digit not in gen_number:
+        if digit[0] != "0" and digit not in gen_number:
             gen_number += digit
     return gen_number
 
@@ -37,10 +37,10 @@ def input_check(guess):
   errors = []
 
   error_types = [
-      (not guess.isdigit(), "Not a number."),
-      (len(guess) != 4, "More or less than 4 characters."),
-      (guess[0] == '0', "Beggins with 0."),
-      (len(guess) != len(set(guess)), "Duplicate characters.")
+      (not guess.isdigit(), "Input needs to be a number."),
+      (len(guess) != 4, ""), "The number needs to be exactly 4-digits long.")
+      (guess[0] == '0', "The number cannot begin with 0."),
+      (len(guess) != len(set(guess)), "The number cannot contain duplicate digits, needs to be unique.")
     ]
 
   for error, message in error_types:
@@ -151,5 +151,5 @@ def main():
       print("You have ended the game!")
       break
 
-if __name__ == __main__:
+if __name__ == "__main__":
     main()
