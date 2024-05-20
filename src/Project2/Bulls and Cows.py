@@ -38,7 +38,7 @@ def input_check(guess):
 
   error_types = [
       (not guess.isdigit(), "Input needs to be a number."),
-      (len(guess) != 4, ""), "The number needs to be exactly 4-digits long.")
+      (len(guess) != 4, ""), "The number needs to be exactly 4-digits long."),
       (guess[0] == '0', "The number cannot begin with 0."),
       (len(guess) != len(set(guess)), "The number cannot contain duplicate digits, needs to be unique.")
     ]
