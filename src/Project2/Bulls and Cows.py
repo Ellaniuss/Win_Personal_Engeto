@@ -9,14 +9,23 @@ discord: ellaniuss
 import random
 
 # prvni cast kodu definuje fci generator nahodneho cisla o 4 cislicich
-
 def random_generator():
-    gen_number = ""
-    while len(gen_number) < 4:
-        digit = str(random.randint(1, 9))
-        if digit[0] != "0" and digit not in gen_number:
-            gen_number += digit
-    return gen_number
+  """
+  Function creates randomized number where first number is not 0 and each digit is uniquie.
+
+  Rerturns:
+    str: string representing uniquie 4-digit number.
+
+  """
+  gen_number = ""
+
+  while len(gen_number) < 4:
+    digit = str(random.randint(0,9))
+    if len(gen_number) == 0 and digit != "0":
+      gen_number += digit
+    elif len(gen_number) > 0 and digit not in gen_number:
+      gen_number += digit
+  return gen_number
 
 def input_check(guess):
   """
