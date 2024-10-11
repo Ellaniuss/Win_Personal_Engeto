@@ -1,152 +1,236 @@
-"""
-election_scrapper.py: třetí projekt do Engeto Online Python Akademie
-author: David Heczko
-email: heczko.david@gmail.com
-discord: David H ellaniuss
-"""
-
 import sys
 
-import pandas
-from bs4 import BeautifulSoup as bs
 import requests
+from bs4 import BeautifulSoup as bs
+import pandas as pd
+import csv
 
-from url_collector import collect_urls
+def validate_input(url,output_filename,errors):
+    '''
+    Validate given input for both arguments.
 
-def validate_url(url):
+    This function checks if the provided arguments are valid.
+    It check URL validity for election scrapping of Czech 2017 comunal elections,
+    where it validates the response status code and checks if the page contains
+    the expected table data (`<td>` tags).
+    It checks if the provided output filename ends with the '.csv' suffix.
+    Errors are appended to the `errors` list if any validation checks fail.
+
+    Args:
+        url (str):
+            The URL to be validated.
+        output_filename (str):
+            String containing name of the csv file to which will be stored data.
+        errors (list):
+            A list that will be updated with error messages if the URL is invalid.
+
+    Returns:
+        valid (boolean):
+            Variable containing boolean.
     '''
-    Function validates validity of URL for scrapping.
-    Expected URL: https://volby.cz - Výsledky hlasování za územní celky, rok 2017
-    Function returns list of errors.
-    '''
+    valid = True
     try:
-        if type(url) != str:
-            errors.append(f"Incorrect input. Expecting string, input is {type(url)}.")
-            return False
-        elif not url.startswith("https://volby.cz/pls/ps2017nss/ps3"):
-            errors.append(f"URL not in valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
-            return False
+        if not url.startswith("https://www.volby.cz/pls/ps2017nss/ps3"):
+            errors.append(f"Input not valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
+            valid = False
+
         response = requests.get(url)
 
         if response.status_code != 200:
             errors.append(f"URL not valid, status code: {response.status_code}")
-            return False
+            valid = False
 
         soup = bs(response.content, "html.parser")
+
         if soup.find("td") is None:
             errors.append(f"URL not valid: Data not found.")
-            return False
+            valid = False
 
-        return True
+        valid = True
     except requests.RequestException as e:
-        print(f"Request failed: {e}")
-        return False
+        errors.append(f"Request failed: {e}")
+        valid = False
 
-def validate_output(output_filename):
-    '''
-    Simple function validating second argument.
-    Second argument is needed to be string ending with .csv.
-    '''
-    return output_filename.endswith(".csv")
+    if not output_filename.endswith(".csv"):
+        errors.append(f"Second argument should be name of the csv file, input was {output_filename}.")
+        valid = False
 
-errors = []
+    return valid
+
+def collect_links(soup):
+    '''
+    Collect links from a BeautifulSoup object.
+
+    This function searches for tags (`<a>`) in the provided BeautifulSoup object
+    and collects the full URLs where the `href` attribute starts with 'ps311'.
+    The base URL 'https://volby.cz/pls/ps2017nss/' is appended to these relative URLs
+    to form complete links. Only unique links are included in the resulting list.
+
+    Args:
+        soup (BeautifulSoup):
+            A BeautifulSoup object.
+
+    Returns:
+        list:
+            A list of all urls scrapped from main url.
+    '''
+    base_url = "https://volby.cz/pls/ps2017nss/"
+    links = list()
+
+    relative_urls = soup.find_all('a',href=True)
+    for url in relative_urls:
+      if url['href'].startswith('ps311'):
+          full_url = base_url + url['href']
+          if full_url not in links:
+              links.append(full_url)
+
+    return links
+
+def create_soup(url):
+    '''
+    Fetch the content of the URL and parse it into BeautifulSoup object.
+
+    This function sends a GET request to the specified URL and parses the HTML
+    content into a BeautifulSoup object. If a request exception occurs, it raises
+    a SystemExit with the exception message, terminating the program.
+
+     Args:
+        url (str): The URL to fetch and parse.
+
+    Returns:
+        BeautifulSoup:
+            A BeautifulSoup object containing the parsed HTML content.
+
+    Raises:
+        SystemExit:
+            If a request exception occurs while fetching the URL.
+    '''
+    try:
+        response = requests.get(url)
+        soup = bs(response.text, 'html.parser')
+        return soup
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
+
+def scrape_page(soup, attrs):
+    '''
+    Scrape text data from a BeautifulSoup objects based on given HTML attribut.
+
+    Function searches through given soup object and looks of all elements with given
+    HTML attribut. It extracts and cleans the text content and retunrs valid data.
+
+    Args:
+        soup (BeautifulSoup): A BeautifulSoup object
+        attrs (dict): A dictionary of HTLM attributes
+
+    Returns:
+        list: A list of cleaned text extracted from the matching elements.
+
+    Raises:
+        SystemExit: If an AttributeError occurs during scraping, the program is terminated
+                   with an error message.
+    '''
+    try:
+        pre_scraps = soup.find_all('td', attrs=attrs)
+        scraps = [i.text.replace('\xa0', '').strip() for i in pre_scraps]
+        return scraps
+    except AttributeError as e:
+        raise SystemExit(f'Error: {e}. Program will be terminated.')
 
 def main():
     '''
-    Main function for scrapping election results from provided URL and saving it to the csv file.
-    Function performs following steps:
-        1. Checks command-line arguments to ensure that there are exactly two given.
-        2. Validates both arguments using functions validate_url and validate_output.
-        3. Fetches HTML content from provided URL by using 'request' library as Main URL for the code.
-        4. Creates list of links from Main URL by using imported function collect_urls.
-        5. Gets data from each link stored in the list of links and saves them to the lists for each cathegory.
-        6. Creates Data dictionary from each cathegory and coresponding data.
-        7. Creates dataframe using Pandas and Data dictionary.
-        8. Creates csv file from dataframe, named by second argument.
+    Function scrape election data from provided URL, process it and save it to an output CSV file.
 
+    This is the main function of the program, which is run by two command line arguments url and output file name.
+    Url needs to be selected for scpecific Czech territorial unit election results (year 2017) from the hyperlink
+    under "Výběr obce" included in main url https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ.
+    The ouput filename needs to contain .csv suffix.
+    This script validates the provided arguments and creates BeautifulSoup (bs object) object from the provided url.
+    Than it itterates through all avaliable links from provided main URL and searches bs object for
+    data about code of the city, city names, number of all voters, number of emmited envelopes, number of
+    valid votes and number of votes per each elected party.
+    Data are saved into Pandas dataframe.
+    CSV file with name provided in secodn argument is created in the folder of the script containing election results.
+
+    Raises:
+        SystemExit:
+            If command-line arguments are missing, or if validation of the URL or output filename fails.
     '''
+    errors = []
+
     if len(sys.argv) < 3:
         print(f"Expected are two arguments: <URL from volby.cz> <output_filename.csv. \n Program will be terminated!")
         sys.exit(1)
-
-    url = sys.argv[1]
+    
+    main_url = sys.argv[1]
     output_filename = sys.argv[2]
 
-
-    if not validate_url(url):
-        print(' '.join(str(e) for e in errors))
-        print(f"Terminating program.")
-        sys.exit(1)
-    elif not validate_output(output_filename):
-        print(f"Error: Second argument should be name of the csv file, input was {output_filename}. Terminating program.")
+    if not validate_input(main_url, output_filename, errors):
+        print('Errors appeared when running code: ')
+        for error in errors:
+            print('\t',error)
+        print('\nTerminating program!')
         sys.exit(1)
 
-    try:
-        response = requests.get(url)
-        soup = bs(response.content, 'html.parser')
-    except requests.RequestException as e:
-        print(f"Error: Failed to getting data from prvided URL. {e}")
+    soup1 = create_soup(main_url)
+    print('Soup created.')
+    links = collect_links(soup1)
+    print('Links collected.')
 
+    attrs = [
+            {'class': 'cislo'},  # 0 codes
+            {'class': 'overflow_name'},  # 1 cities
+            {'class': 'cislo', 'headers': 'sa2'},  # 2 voters
+            {'class': 'cislo', 'headers': 'sa3'},  # 3 envelopes
+            {'class': 'cislo', 'headers': 'sa6'},  # 4 valid
+            {'class': 'overflow_name'},  # 5 parties
+            {'headers': 't1sa2 t1sb3'},  # 6 party votes table 1
+            {'headers': 't2sa2 t2sb3'}   # 7 party votes table 2
+        ]
 
-    links = collect_urls(url)
+    results = []
 
-
-    locations = []
-    registered_final = []
-    envelopes_final = []
-    valid_votes_final = []
-    parties_final = []
-    party_votes_final = []
-
-    codes = [city.text for city in soup.find_all("td", class_="cislo")]
-    cities = [city.text for city in soup.find_all("td", class_="overflow_name")]
-
+    codes = scrape_page(soup1, attrs[0])
+    cities = scrape_page(soup1, attrs[1])
+    print('Beginning fetching sequence.')
     for link in links:
         try:
-            local_url = requests.get(link)
-            local_soup = bs(local_url.content, 'html.parser')
+            soup2 = create_soup(link)
+            parties = scrape_page(soup2, attrs[5])
 
-            registered = int(local_soup.find("td", headers="sa2").text.replace("\xa0",""))
-            registered_final.append(registered)
+            data = {
+                'Code': None,
+                'Location': None,
+                'Registered': None,
+                'Envelopes': None,
+                'Valid': None,
+            }
 
-            envelopes = int(local_soup.find("td", headers="sa5").text.replace("\xa0",""))
-            envelopes_final.append(envelopes)
+            party_votes = scrape_page(soup2, attrs[6]) + scrape_page(soup2, attrs[7])
 
-            valid_votes = int(local_soup.find("td", headers="sa6").text.replace("\xa0",""))
-            valid_votes_final.append(valid_votes)
+            data['Code'] = codes[len(results)]
+            data['Location'] = cities[len(results)]
+            data['Registered'] = int(scrape_page(soup2, attrs[2])[0])
+            data['Envelopes'] = int(scrape_page(soup2, attrs[3])[0])
+            data['Valid'] = int(scrape_page(soup2, attrs[4])[0])
 
-            parties_t1 = [party.text for party in local_soup.find_all("td", headers="t1sa1 t1sb2")]
-            parties_t2 = [party.text for party in local_soup.find_all("td", headers="t2sa1 t2sb2")]
+            for i, party in enumerate(parties):
+                data[party] = int(party_votes[i])
 
-            parties_final.append(parties_t1 +  parties_t2)
-
-            party_votes_t1 = [int(vote.text.replace('\xa0','').replace('-', '0')) for vote in local_soup.find_all("td", headers="t1sa2 t1sb3")]
-            party_votes_t2 = [int(vote.text.replace('\xa0','').replace('-', '0')) for vote in local_soup.find_all("td", headers="t2sa2 t2sb3")]
-            party_votes_final.append(party_votes_t1 + party_votes_t2)
-
+            results.append(data)
         except requests.RequestException as e:
             print(f"Error: Failed to getting data from link {link}. {e}")
             continue
-
-
-    data = {
-        "Codes" : codes,
-        "Location" : cities,
-        "Registered" : registered_final,
-        "Envelopes" : envelopes_final,
-        "Valid" : valid_votes_final
-    }
-
-    for index, party in enumerate(parties_final[0]):
-        party_votes_data = [votes[index] for votes in party_votes_final]
-        data[party] = party_votes_data
-
-    df = pandas.DataFrame(data)
+    print('Data collected.')        
+    df = pd.DataFrame(results)
+    print('Dataframe created.')
     try:
-        df.to_csv(output_filename, index=False, encoding="utf-8-sig")
-        print(f"Data succefully saved to {output_filename}")
+        df.to_csv(output_filename, encoding='utf-8-sig', index=False)
+        print(f"Data successfully saved to {output_filename}")
     except IOError as e:
         print(f"Error: Failed to write data to {output_filename}. {e}")
+
+
 
 if __name__ == '__main__':
     main()
