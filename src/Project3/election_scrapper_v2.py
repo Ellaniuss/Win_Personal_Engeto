@@ -25,10 +25,7 @@ def validate_url(url,errors):
             True if the URL is valid, False otherwise.
     '''
     try:
-        if type(url) != str:
-            errors.append(f"Incorrect input. Expecting string, input is {type(url)}.")
-            return False
-        elif not url.startswith("https://volby.cz/pls/ps2017nss/ps3"):
+        if not url.startswith("https://www.volby.cz/pls/ps2017nss/ps3"):
             errors.append(f"URL not in valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
             return False
         response = requests.get(url)
@@ -168,15 +165,22 @@ def main():
     '''
     errors = []
 
-    if len(sys.argv) < 2:
-        raise SystemExit(f"Error: Please provide the URL as a command-line argument. Program will be terminated.")
+    if len(sys.argv) < 3:
+        print(f"Expected are two arguments: <URL from volby.cz> <output_filename.csv. \n Program will be terminated!")
+        sys.exit(1)
+    
     main_url = sys.argv[1]
     output_filename = sys.argv[2]
 
-    if not validate_url(main_url,errors) and validate_output(output_filename,errors):
+    if not validate_url(main_url, errors):
         print(' '.join(str(e) for e in errors))
         print(f"Terminating program.")
         sys.exit(1)
+
+    elif not validate_output(output_filename,errors):
+            print(' '.join(str(e) for e in errors))
+            print(f"Terminating program.")
+            sys.exit(1)
 
     soup1 = create_soup(main_url)
     print('Soup created.')
