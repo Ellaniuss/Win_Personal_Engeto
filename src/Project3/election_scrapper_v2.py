@@ -192,7 +192,7 @@ def main():
 
     codes = scrape_page(soup1, attrs[0])
     cities = scrape_page(soup1, attrs[1])
-    print('Beggining fetching sequence.')
+    print('Beginning fetching sequence.')
     for link in links:
         try:
             soup2 = create_soup(link)
@@ -226,7 +226,7 @@ def main():
     print('Dataframe created.')
     try:
         df.to_csv(output_filename, encoding='utf-8-sig', index=False)
-        print(f"Data succefully saved to {output_filename}")
+        print(f"Data successfully saved to {output_filename}")
     except IOError as e:
         print(f"Error: Failed to write data to {output_filename}. {e}")
 
