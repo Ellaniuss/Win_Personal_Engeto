@@ -5,65 +5,58 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 import csv
 
-def validate_url(url,errors):
+def validate_input(url,output_filename,errors):
     '''
-    Validate a given URL based on format, status code, and page content.
+    Validate given input for both arguments.
 
-    This function checks if the provided URL is a valid for election scrapping of Czech 2017 comunal elections.
-    It validates the response status code and checks if the page contains
-    the expected table data (`<td>` tags). Errors are appended to the `errors` list
-    if any validation checks fail.
+    This function checks if the provided arguments are valid.
+    It check URL validity for election scrapping of Czech 2017 comunal elections,
+    where it validates the response status code and checks if the page contains
+    the expected table data (`<td>` tags).
+    It checks if the provided output filename ends with the '.csv' suffix.
+    Errors are appended to the `errors` list if any validation checks fail.
 
     Args:
         url (str):
             The URL to be validated.
+        output_filename (str):
+            String containing name of the csv file to which will be stored data.
         errors (list):
             A list that will be updated with error messages if the URL is invalid.
 
     Returns:
-        bool:
-            True if the URL is valid, False otherwise.
+        valid (boolean):
+            Variable containing boolean.
     '''
+    valid = True
     try:
         if not url.startswith("https://www.volby.cz/pls/ps2017nss/ps3"):
-            errors.append(f"URL not in valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
-            return False
+            errors.append(f"Input not valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
+            valid = False
+
         response = requests.get(url)
 
         if response.status_code != 200:
             errors.append(f"URL not valid, status code: {response.status_code}")
-            return False
+            valid = False
 
         soup = bs(response.content, "html.parser")
+
         if soup.find("td") is None:
             errors.append(f"URL not valid: Data not found.")
-            return False
+            valid = False
 
-        return True
+        valid = True
     except requests.RequestException as e:
-        print(f"Request failed: {e}")
-        return False
+        errors.append(f"Request failed: {e}")
+        valid = False
 
-def validate_output(output_filename, errors):
-    '''
-    Validate the output filename to ensure it is a CSV file.
-
-    This function checks if the provided output filename ends with the '.csv' extension.
-    If the filename is invalid, an error message is added to the `errors` list.
-
-    Args:
-        output_filename (str):
-            The name of the output file to validate.
-        errors (list):
-            A list to which error messages will be appended if the validation fails.
-
-    Returns:
-        bool:
-            False if the output filename is not valid, otherwise no return value.
-    '''
     if not output_filename.endswith(".csv"):
-        errors.append(f"Second argument should be name of the csv file, input was {output_filename}. Terminating program.")
-    return False
+        errors.append(f"Second argument should be name of the csv file, input was {output_filename}.")
+        valid = False
+
+    return valid
+
 def collect_links(soup):
     '''
     Collect links from a BeautifulSoup object.
@@ -172,15 +165,12 @@ def main():
     main_url = sys.argv[1]
     output_filename = sys.argv[2]
 
-    if not validate_url(main_url, errors):
-        print(' '.join(str(e) for e in errors))
-        print(f"Terminating program.")
+    if not validate_input(main_url, output_filename, errors):
+        print('Errors appeared when running code: ')
+        for error in errors:
+            print('\t',error)
+        print('\nTerminating program!')
         sys.exit(1)
-
-    elif not validate_output(output_filename,errors):
-            print(' '.join(str(e) for e in errors))
-            print(f"Terminating program.")
-            sys.exit(1)
 
     soup1 = create_soup(main_url)
     print('Soup created.')
