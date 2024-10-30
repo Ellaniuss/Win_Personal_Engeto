@@ -3,10 +3,10 @@ import sys
 import requests
 from bs4 import BeautifulSoup as bs
 import pandas as pd
-import csv
+
 
 def get_input():
-    '''
+    """
     Retrieves command-line arguments for the URL and output filename.
 
     This function expects two command-line arguments:
@@ -18,7 +18,7 @@ def get_input():
     Returns:
         main_url variable (str)
         output_filename variable (str)
-    '''
+    """
     if len(sys.argv) < 3:
         print(f"Expected are two arguments: <URL from volby.cz> <output_filename.csv. \n Program will be terminated!")
         sys.exit(1)
@@ -28,12 +28,13 @@ def get_input():
     
     return main_url, output_filename
 
-def validate_input(url,output_filename):
-    '''
+
+def validate_input(url, output_filename):
+    """
     Validate given input for both arguments.
 
     This function checks if the provided arguments are valid.
-    It check URL validity for election scrapping of Czech 2017 comunal elections,
+    It checks URL validity for election scrapping of Czech 2017 communal elections,
     where it validates the response status code and checks if the page contains
     the expected table data (`<td>` tags).
     It checks if the provided output filename ends with the '.csv' suffix.
@@ -44,20 +45,17 @@ def validate_input(url,output_filename):
             The URL to be validated.
         output_filename (str):
             String containing name of the csv file to which will be stored data.
-        errors (list):
-            A list that will be updated with error messages if the URL is invalid.
-
     Returns:
         valid (boolean):
             Variable containing boolean.
         errors(list):
             List containing errors
-    '''
+    """
     errors = []
     valid = True
     try:
         if not url.startswith("https://www.volby.cz/pls/ps2017nss/ps3"):
-            errors.append(f"Input not valid. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
+            errors.append(f"Input error. Expected URL for: 'Výsledky hlasování pro územní celky / Výběr Obce (2017)'")
             valid = False
 
         response = requests.get(url)
@@ -82,8 +80,9 @@ def validate_input(url,output_filename):
 
     return valid, errors
 
+
 def collect_links(soup):
-    '''
+    """
     Collect links from a BeautifulSoup object.
 
     This function searches for tags (`<a>`) in the provided BeautifulSoup object
@@ -98,21 +97,25 @@ def collect_links(soup):
     Returns:
         list:
             A list of all urls scrapped from main url.
-    '''
+    """
+
     base_url = "https://volby.cz/pls/ps2017nss/"
     links = list()
 
-    relative_urls = soup.find_all('a',href=True)
+    relative_urls = soup.find_all('a', href=True)
+
     for url in relative_urls:
-      if url['href'].startswith('ps311'):
-          full_url = base_url + url['href']
-          if full_url not in links:
-              links.append(full_url)
+        if url['href'].startswith('ps311'):
+            full_url = base_url + url['href']
+
+        if full_url not in links:
+            links.append(full_url)
 
     return links
 
+
 def create_soup(url):
-    '''
+    """
     Fetch the content of the URL and parse it into BeautifulSoup object.
 
     This function sends a GET request to the specified URL and parses the HTML
@@ -129,7 +132,7 @@ def create_soup(url):
     Raises:
         SystemExit:
             If a request exception occurs while fetching the URL.
-    '''
+    """
     try:
         response = requests.get(url)
         soup = bs(response.text, 'html.parser')
@@ -137,16 +140,17 @@ def create_soup(url):
     except requests.exceptions.RequestException as e:
         raise SystemExit(e)
 
+
 def scrape_page(soup, attrs):
-    '''
-    Scrape text data from a BeautifulSoup objects based on given HTML attribut.
+    """
+    Scrape text data from a BeautifulSoup objects based on given HTML attribute.
 
     Function searches through given soup object and looks of all elements with given
-    HTML attribut. It extracts and cleans the text content and retunrs valid data.
+    HTML attribute. It extracts and cleans the text content and returns valid data.
 
     Args:
         soup (BeautifulSoup): A BeautifulSoup object
-        attrs (dict): A dictionary of HTLM attributes
+        attrs (dict): A dictionary of HTML attributes
 
     Returns:
         list: A list of cleaned text extracted from the matching elements.
@@ -154,7 +158,7 @@ def scrape_page(soup, attrs):
     Raises:
         SystemExit: If an AttributeError occurs during scraping, the program is terminated
                    with an error message.
-    '''
+    """
     try:
         pre_scraps = soup.find_all('td', attrs=attrs)
         scraps = [i.text.replace('\xa0', '').strip() for i in pre_scraps]
@@ -162,33 +166,34 @@ def scrape_page(soup, attrs):
     except AttributeError as e:
         raise SystemExit(f'Error: {e}. Program will be terminated.')
 
+
 def main():
-    '''
+    """
     Function scrape election data from provided URL, process it and save it to an output CSV file.
 
     This is the main function of the program, which is run by two command line arguments url and output file name.
-    Url needs to be selected for scpecific Czech territorial unit election results (year 2017) from the hyperlink
+    Url needs to be selected for specific Czech territorial unit election results (year 2017) from the hyperlink
     under "Výběr obce" included in main url https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ.
-    The ouput filename needs to contain .csv suffix.
+    The output filename needs to contain .csv suffix.
     This script validates the provided arguments and creates BeautifulSoup (bs object) object from the provided url.
-    Than it itterates through all avaliable links from provided main URL and searches bs object for
-    data about code of the city, city names, number of all voters, number of emmited envelopes, number of
+    Then it iterates through all available links from provided main URL and searches bs object for
+    data about code of the city, city names, number of all voters, number of emitted envelopes, number of
     valid votes and number of votes per each elected party.
     Data are saved into Pandas dataframe.
-    CSV file with name provided in secodn argument is created in the folder of the script containing election results.
+    CSV file with name provided in second argument is created in the folder of the script containing election results.
 
     Raises:
         SystemExit:
             If command-line arguments are missing, or if validation of the URL or output filename fails.
-    '''
+    """
 
     main_url, output_filename = get_input()
-    valid, errors = validate_input(main_url,output_filename)
+    valid, errors = validate_input(main_url, output_filename)
 
     if not valid:
         print('Errors appeared when running code: ')
         for error in errors:
-            print('\t',error)
+            print('\t', error)
         print('\nTerminating program!')
         sys.exit(1)
 
@@ -249,7 +254,6 @@ def main():
         print(f"Data successfully saved to {output_filename}")
     except IOError as e:
         print(f"Error: Failed to write data to {output_filename}. {e}")
-
 
 
 if __name__ == '__main__':
