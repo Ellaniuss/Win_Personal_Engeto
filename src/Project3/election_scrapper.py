@@ -190,69 +190,72 @@ def scrape_page(soup, attrs):
         raise SystemExit(f'Error: {e}. Program will be terminated.')
 
 
-def main():
+def create_data_structures():
     """
-    Function scrape election data from provided URL, process it and save it to an output CSV file.
+    Creates two structures for storing scrapped data.
 
-    This is the main function of the program, which is run by two command line arguments url and output file name.
-    Url needs to be selected for specific Czech territorial unit election results (year 2017) from the hyperlink
-    under "Výběr obce" included in main url https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ.
-    The output filename needs to contain .csv suffix.
-    This script validates the provided arguments and creates BeautifulSoup (bs object) object from the provided url.
-    Then it iterates through all available links from provided main URL and searches bs object for
-    data about code of the city, city names, number of all voters, number of emitted envelopes, number of
-    valid votes and number of votes per each elected party.
-    Data are saved into Pandas dataframe.
-    CSV file with name provided in second argument is created in the folder of the script containing election results.
+    This function creates dictionary of HTML attributes that are used to identify specific data elements
+    for scrapping from HTML page.
+    Then it creates a dictionary for each data category scrapped from HTML page.
+
+    Returns:
+        attrs (list): A list named attrs of dictionaries.
+        data (dict): A dictionary for each
+    """
+    attrs = [
+        {'class': 'cislo'},  # 0 codes
+        {'class': 'overflow_name'},  # 1 cities
+        {'class': 'cislo', 'headers': 'sa2'},  # 2 voters
+        {'class': 'cislo', 'headers': 'sa3'},  # 3 envelopes
+        {'class': 'cislo', 'headers': 'sa6'},  # 4 valid
+        {'class': 'overflow_name'},  # 5 parties
+        {'headers': 't1sa2 t1sb3'},  # 6 party votes table 1
+        {'headers': 't2sa2 t2sb3'}  # 7 party votes table 2
+    ]
+
+    data = {
+        'Code': None,
+        'Location': None,
+        'Registered': None,
+        'Envelopes': None,
+        'Valid': None,
+    }
+
+    return attrs, data
+
+
+def collect_data(links, attrs, codes, cities):
+    """
+    Scrapes and collects data for each city in chosen territorial unit.
+
+    Function created blank list named results and receives list of links that are collected from main_url.
+    For each link it creates BeautifulSoup object and data structure containing main categories.
+    Then it scrapes data for each requested category listed in attrs and stores them on corresponding keys in dictionary
+    data. Finally, it appends each dictionary to the list results.
+
+    Args:
+        links (list): A list of URLs to be scraped.
+        attrs (list): A list of attribute dictionaries used to locate specific data in HTML (e.g., codes, voters).
+        codes (list): A list of unique codes corresponding to each location.
+        cities (list): A list of city names or locations matching each code.
+
+    Returns:
+        results (list): A list of dictionaries, each containing the scraped data.
 
     Raises:
-        SystemExit:
-            If command-line arguments are missing, or if validation of the URL or output filename fails.
+        requests.RequestException: If a request fails for a URL, an error message is printed,
+                                   and the function continues to the next link.
     """
 
-    main_url, output_filename = get_input()
-    print('Input received.')
-
-    valid, errors = validate_input(main_url, output_filename)
-    print('Input validated.')
-
-    check_for_messages(valid, errors)
-
-    soup1 = create_soup(main_url)
-    print('Soup created.')
-
-    links = collect_links(soup1)
-    print('Links collected.')
-
-    attrs = [
-            {'class': 'cislo'},  # 0 codes
-            {'class': 'overflow_name'},  # 1 cities
-            {'class': 'cislo', 'headers': 'sa2'},  # 2 voters
-            {'class': 'cislo', 'headers': 'sa3'},  # 3 envelopes
-            {'class': 'cislo', 'headers': 'sa6'},  # 4 valid
-            {'class': 'overflow_name'},  # 5 parties
-            {'headers': 't1sa2 t1sb3'},  # 6 party votes table 1
-            {'headers': 't2sa2 t2sb3'}   # 7 party votes table 2
-        ]
-
+    print('Beginning fetching sequence.')
     results = []
 
-    codes = scrape_page(soup1, attrs[0])
-    cities = scrape_page(soup1, attrs[1])
-    print('Beginning fetching sequence.')
     for link in links:
         try:
             soup2 = create_soup(link)
+            _, data = create_data_structures()
+
             parties = scrape_page(soup2, attrs[5])
-
-            data = {
-                'Code': None,
-                'Location': None,
-                'Registered': None,
-                'Envelopes': None,
-                'Valid': None,
-            }
-
             party_votes = scrape_page(soup2, attrs[6]) + scrape_page(soup2, attrs[7])
 
             data['Code'] = codes[len(results)]
@@ -265,10 +268,28 @@ def main():
                 data[party] = int(party_votes[i])
 
             results.append(data)
+
         except requests.RequestException as e:
             print(f"Error: Failed to getting data from link {link}. {e}")
             continue
-    print('Data collected.')        
+    print('Data collected.')
+    return results
+
+
+def create_csv(results, output_filename):
+    """
+    Creates a CSV file from a collected data in results and saves it to the specified output filename.
+
+    This function converts the created data structure stored in results into a Pandas DataFrame.
+    It then creates CSV file with UTF-8 encoding and writes the DataFrame to it.
+
+    Args:
+        results (list): A list created by function collect_data().
+        output_filename (str): The name of the output CSV file.
+
+    Raises:
+        IOError: If there is an error writing the DataFrame to the CSV file, an error message is printed.
+    """
     df = pd.DataFrame(results)
     print('Dataframe created.')
     try:
@@ -276,6 +297,38 @@ def main():
         print(f"Data successfully saved to {output_filename}")
     except IOError as e:
         print(f"Error: Failed to write data to {output_filename}. {e}")
+
+
+def main():
+    """
+    Main function of the script, initiating and running scrapping process.
+
+    This function coordinates the execution of the script by performing following steps:
+        1. Retrieves command-line arguments for the URL and output filename using `get_input()`.
+        2. Validates the input URL and output filename using `validate_input()`.
+        3. Creates a BeautifulSoup object from the main URL to scrape initial data.
+        4. Collects links to detailed pages for each city using `collect_links()`.
+        5. Scrapes data for codes and city names from the initial page.
+        6. Collects data for each city using `collect_data()`,
+        7. Creates a CSV file from the collected data using `create_csv()`.
+
+    """
+
+    main_url, output_filename = get_input()
+    valid, errors = validate_input(main_url, output_filename)
+    check_for_messages(valid, errors)
+
+    soup1 = create_soup(main_url)
+    links = collect_links(soup1)
+
+    attrs, _ = create_data_structures()
+
+    codes = scrape_page(soup1, attrs[0])
+    cities = scrape_page(soup1, attrs[1])
+
+    results = collect_data(links, attrs, codes, cities)
+
+    create_csv(results, output_filename)
 
 
 if __name__ == '__main__':
