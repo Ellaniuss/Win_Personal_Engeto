@@ -130,9 +130,8 @@ def collect_links(soup):
     for url in relative_urls:
         if url['href'].startswith('ps311'):
             full_url = base_url + url['href']
-
-        if full_url not in links:
-            links.append(full_url)
+            if full_url not in links:
+                links.append(full_url)
 
     return links
 
