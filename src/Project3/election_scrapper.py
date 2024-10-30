@@ -81,6 +81,29 @@ def validate_input(url, output_filename):
     return valid, errors
 
 
+def check_for_messages(valid, errors):
+    """
+    Checks for input validity and prints errors if any.
+
+    This function takes the validation status of input and list of errors, printing each error
+    if validation has failed. If errors are present, it terminates the program.
+
+    Args:
+        valid (bool): The validation status; should be False if any errors occurred.
+        errors (list): A list of error messages generated during validation.
+
+    Raises:
+        SystemExit: Exits the program if validation fails.
+    """
+
+    if not valid:
+        print('Errors appeared when running code: ')
+        for error in errors:
+            print('\t', error)
+        print('\nTerminating program!')
+        sys.exit(1)
+
+
 def collect_links(soup):
     """
     Collect links from a BeautifulSoup object.
@@ -189,13 +212,7 @@ def main():
 
     main_url, output_filename = get_input()
     valid, errors = validate_input(main_url, output_filename)
-
-    if not valid:
-        print('Errors appeared when running code: ')
-        for error in errors:
-            print('\t', error)
-        print('\nTerminating program!')
-        sys.exit(1)
+    check_for_messages(valid, errors)
 
     soup1 = create_soup(main_url)
     print('Soup created.')
