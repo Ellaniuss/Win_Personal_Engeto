@@ -28,7 +28,7 @@ def get_input():
     
     return main_url, output_filename
 
-def validate_input(url,output_filename,errors):
+def validate_input(url,output_filename):
     '''
     Validate given input for both arguments.
 
@@ -50,7 +50,10 @@ def validate_input(url,output_filename,errors):
     Returns:
         valid (boolean):
             Variable containing boolean.
+        errors(list):
+            List containing errors
     '''
+    errors = []
     valid = True
     try:
         if not url.startswith("https://www.volby.cz/pls/ps2017nss/ps3"):
@@ -69,7 +72,6 @@ def validate_input(url,output_filename,errors):
             errors.append(f"URL not valid: Data not found.")
             valid = False
 
-        valid = True
     except requests.RequestException as e:
         errors.append(f"Request failed: {e}")
         valid = False
@@ -78,7 +80,7 @@ def validate_input(url,output_filename,errors):
         errors.append(f"Second argument should be name of the csv file, input was {output_filename}.")
         valid = False
 
-    return valid
+    return valid, errors
 
 def collect_links(soup):
     '''
@@ -179,11 +181,11 @@ def main():
         SystemExit:
             If command-line arguments are missing, or if validation of the URL or output filename fails.
     '''
-    errors = []
 
     main_url, output_filename = get_input()
+    valid, errors = validate_input(main_url,output_filename)
 
-    if not validate_input(main_url, output_filename, errors):
+    if not valid:
         print('Errors appeared when running code: ')
         for error in errors:
             print('\t',error)
