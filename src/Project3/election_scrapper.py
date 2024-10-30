@@ -211,11 +211,16 @@ def main():
     """
 
     main_url, output_filename = get_input()
+    print('Input received.')
+
     valid, errors = validate_input(main_url, output_filename)
+    print('Input validated.')
+
     check_for_messages(valid, errors)
 
     soup1 = create_soup(main_url)
     print('Soup created.')
+
     links = collect_links(soup1)
     print('Links collected.')
 
