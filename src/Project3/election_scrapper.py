@@ -5,6 +5,29 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 import csv
 
+def get_input():
+    '''
+    Retrieves command-line arguments for the URL and output filename.
+
+    This function expects two command-line arguments:
+    - A URL from https://www.volby.cz/pls/ps2017nss/ps3?xjazyk=CZ.
+    - An output filename (with a .csv extension).
+
+    If either argument is missing, the function prints an error message and exits the program.
+
+    Returns:
+        main_url variable (str)
+        output_filename variable (str)
+    '''
+    if len(sys.argv) < 3:
+        print(f"Expected are two arguments: <URL from volby.cz> <output_filename.csv. \n Program will be terminated!")
+        sys.exit(1)
+    
+    main_url = sys.argv[1]
+    output_filename = sys.argv[2]
+    
+    return main_url, output_filename
+
 def validate_input(url,output_filename,errors):
     '''
     Validate given input for both arguments.
@@ -158,12 +181,7 @@ def main():
     '''
     errors = []
 
-    if len(sys.argv) < 3:
-        print(f"Expected are two arguments: <URL from volby.cz> <output_filename.csv. \n Program will be terminated!")
-        sys.exit(1)
-    
-    main_url = sys.argv[1]
-    output_filename = sys.argv[2]
+    main_url, output_filename = get_input()
 
     if not validate_input(main_url, output_filename, errors):
         print('Errors appeared when running code: ')
