@@ -61,13 +61,16 @@ CREATE VIEW cz_avg_pay AS
 /*
  * 3. Join of cz_avg_pay and cz_price_by_years and create table
  */
-CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
+-- CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
 	SELECT
 		cap.payroll_year,
 		cap.avg_pay,
 		cap.industry_branch_code AS industry_code,
 		cap.name AS industry,
-		cpby.*
+		cpby.calculated_item,
+		cpby.amount_value,
+		cpby.avg_value,
+		cpby.calculated_region
 	FROM cz_avg_pay cap
 	LEFT JOIN cz_price_by_years cpby
 		ON cap.payroll_year = cpby.calculated_year
@@ -75,6 +78,22 @@ CREATE TABLE t_david_heczko_project_SQL_primary_final AS
 	GROUP BY 
 		cpby.calculated_year,
 		cap.industry_branch_code,
+		cpby.calculated_item
+
+CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
+	SELECT
+		cap.payroll_year AS calculated_year,
+		round(cap.avg_pay) AS avg_pay,
+		cpby.calculated_item,
+		cpby.amount_value,
+		cpby.avg_value	
+	FROM cz_avg_pay cap
+	LEFT JOIN cz_price_by_years cpby
+		ON cap.payroll_year = cpby.calculated_year
+	WHERE cpby.calculated_item IS NOT NULL
+	GROUP BY 
+		cpby.calculated_year,
+		cap.avg_pay,
 		cpby.calculated_item
 
 SELECT *
