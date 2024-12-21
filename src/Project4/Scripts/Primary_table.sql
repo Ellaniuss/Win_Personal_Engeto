@@ -84,6 +84,7 @@ CREATE TABLE t_david_heczko_project_SQL_primary_final AS
 	SELECT
 		cap.payroll_year AS calculated_year,
 		round(cap.avg_pay) AS avg_pay,
+		cap.name,
 		cpby.calculated_item,
 		cpby.amount_value,
 		cpby.avg_value	
