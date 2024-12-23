@@ -1,7 +1,7 @@
 /*
  * 1. creation of view and selection for czechia_price with relevant colums, calculated year and average value of prices
  */
-CREATE VIEW cz_price_by_years AS 		
+CREATE VIEW IF NOT EXISTS cz_price_by_years AS 		
 	SELECT
 		YEAR(date_from) AS calculated_year,
 		cpc.name AS calculated_item,
@@ -31,25 +31,23 @@ FROM cz_price_by_years cpby;
 /*
  * 2. create selection for czechia_payroll
  */
-CREATE VIEW cz_avg_pay AS 
+CREATE VIEW IF NOT EXISTS cz_avg_pay AS 
 	SELECT
-		c_price.payroll_year,
-		avg(c_price.value) AS avg_pay,
-		c_price.industry_branch_code,
+		c_pay.payroll_year,
+		avg(c_pay.value) AS avg_pay,
+		c_pay.industry_branch_code,
 		cpib.name
-	FROM czechia_payroll c_price
+	FROM czechia_payroll c_pay
 	JOIN czechia_payroll_calculation cpc
-		ON c_price.calculation_code = cpc.code
-	JOIN czechia_payroll_unit cpu
-		ON c_price.unit_code = cpu.code
+		ON c_pay.calculation_code = cpc.code
 	JOIN czechia_payroll_value_type p_type
-		ON c_price.value_type_code = p_type.code
+		ON c_pay.value_type_code = p_type.code
 	JOIN czechia_payroll_industry_branch cpib
-		ON c_price.industry_branch_code = cpib.code
+		ON c_pay.industry_branch_code = cpib.code
 	WHERE 
 		p_type.code = 5958
 		AND 
-		c_price.calculation_code = 200
+		c_pay.calculation_code = 200
 	GROUP BY
 		payroll_year,
 		industry_branch_code,
@@ -57,28 +55,13 @@ CREATE VIEW cz_avg_pay AS
 	ORDER BY
 		payroll_year,
 		industry_branch_code
+		
+DROP VIEW cz_avg_pay
 
 /*
  * 3. Join of cz_avg_pay and cz_price_by_years and create table
  */
--- CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
-	SELECT
-		cap.payroll_year,
-		cap.avg_pay,
-		cap.industry_branch_code AS industry_code,
-		cap.name AS industry,
-		cpby.calculated_item,
-		cpby.amount_value,
-		cpby.avg_value,
-		cpby.calculated_region
-	FROM cz_avg_pay cap
-	LEFT JOIN cz_price_by_years cpby
-		ON cap.payroll_year = cpby.calculated_year
-	WHERE cpby.calculated_item IS NOT NULL
-	GROUP BY 
-		cpby.calculated_year,
-		cap.industry_branch_code,
-		cpby.calculated_item
+
 
 CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
 	SELECT
