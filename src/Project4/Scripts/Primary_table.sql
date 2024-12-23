@@ -63,7 +63,7 @@ DROP VIEW cz_avg_pay
  */
 
 
-CREATE TABLE t_david_heczko_project_SQL_primary_final AS 
+CREATE OR REPLACE TABLE t_david_heczko_project_SQL_primary_final AS 
 	SELECT
 		cap.payroll_year AS calculated_year,
 		round(cap.avg_pay) AS avg_pay,
@@ -78,7 +78,10 @@ CREATE TABLE t_david_heczko_project_SQL_primary_final AS
 	GROUP BY 
 		cpby.calculated_year,
 		cap.avg_pay,
-		cpby.calculated_item
-
+		cap.name,
+		cpby.calculated_item,
+		cpby.amount_value,
+		cpby.avg_value
+		
 SELECT *
 FROM t_david_heczko_project_sql_primary_final dtable
