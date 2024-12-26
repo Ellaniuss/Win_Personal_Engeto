@@ -28,7 +28,7 @@ CREATE VIEW IF NOT EXISTS increase_pay_check AS
  * 2. selecting only industries wich had decrease of avg_pay during specific years
  */
 
--- following shows all branches and calculated yers in which there was decrease of average pay against pervious year.
+-- following shows all branches and calculated years in which there was decrease of average pay against pervious year.
 SELECT
 	branch_code,
 	branch_name,
