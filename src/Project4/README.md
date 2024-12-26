@@ -95,3 +95,13 @@ Detail pro jednotlivé zasažené obory:
  g) **2016:**
 - Těžba a dobývání
 
+  ### 2. Kolik je možné si koupit litrů mléka a kilogramů chleba za první a poslední srovnatelné období v dostupných datech cen a mezd?
+  Z dostupných dat vyplývá, že v roce 2006 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+      a) 919 kilogramů chleba
+      b) 1026 litrů mléka
+  Zato v roce 2018 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+      a) 1051 kilogramů chleba, což je o 132 kilogramů více než v roce 2006
+      b) 1285 litrů mléka, což je o 256 litrů více než v roce 2006
+
+
+
