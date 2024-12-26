@@ -1,26 +1,24 @@
 /*
  * 1. creation of view and selection for czechia_price with relevant colums, calculated year and average value of prices
  */
-CREATE VIEW IF NOT EXISTS cz_price_by_years AS 		
+CREATE VIEW IF NOT EXISTS cz_price_by_years AS 
 	SELECT
-		YEAR(date_from) AS calculated_year,
-		cpc.name AS calculated_item,
-		concat(cpc.price_value, ' ', cpc.price_unit) AS amount_value,
-		round(avg(value), 2) AS avg_value,
-		cr.name AS calculated_region
+		year(date_from) AS price_year,
+		cpc.name AS provision_name,
+		concat(cpc.price_value,' ', cpc.price_unit) AS provision_unit,
+		round(avg(value),2) AS avg_price
 	FROM czechia_price c_price
-	JOIN czechia_price_category cpc
+	LEFT JOIN czechia_price_category cpc
 		ON c_price.category_code = cpc.code
-	JOIN czechia_region cr
-		ON c_price.region_code = cr.code
 	WHERE
-		region_code IS NOT NULL
-	GROUP BY
-		category_code,
-		region_code,
-		YEAR(date_from)
+		region_code IS NULL
+	GROUP BY 
+		year(date_from),
+		cpc.name,
+		concat(cpc.price_value,' ', cpc.price_unit)
 	ORDER BY
 		year(date_from)
+	
 			
 
 -- check of the created view
@@ -56,32 +54,35 @@ CREATE VIEW IF NOT EXISTS cz_avg_pay AS
 		payroll_year,
 		industry_branch_code
 		
-DROP VIEW cz_avg_pay
 
 /*
  * 3. Join of cz_avg_pay and cz_price_by_years and create table
  */
-
-
+		
 CREATE OR REPLACE TABLE t_david_heczko_project_SQL_primary_final AS 
 	SELECT
 		cap.payroll_year AS calculated_year,
-		round(cap.avg_pay) AS avg_pay,
-		cap.name,
-		cpby.calculated_item,
-		cpby.amount_value,
-		cpby.avg_value	
+		round(cap.avg_pay,2) AS avg_pay,
+		cap.industry_branch_code AS branch_code,
+		cap.name AS branch_name,
+		cpby.provision_name AS parovision_name,
+		cpby.provision_unit AS provision_unit,
+		cpby.avg_price AS avg_price
 	FROM cz_avg_pay cap
-	LEFT JOIN cz_price_by_years cpby
-		ON cap.payroll_year = cpby.calculated_year
-	WHERE cpby.calculated_item IS NOT NULL
-	GROUP BY 
-		cpby.calculated_year,
+	JOIN cz_price_by_years cpby
+		ON cap.payroll_year = cpby.price_year
+	GROUP BY
+		cap.payroll_year,
 		cap.avg_pay,
-		cap.name,
-		cpby.calculated_item,
-		cpby.amount_value,
-		cpby.avg_value
+		cap.industry_branch_code,
+		cpby.provision_name,
+		cpby.provision_unit,
+		cpby.avg_price
+	ORDER BY
+		cap.payroll_year,
+		cap.industry_branch_code,
+		cpby.provision_name 
+	
 		
 SELECT *
 FROM t_david_heczko_project_sql_primary_final dtable
