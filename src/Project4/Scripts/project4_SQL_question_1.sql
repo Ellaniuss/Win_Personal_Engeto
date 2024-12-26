@@ -44,7 +44,7 @@ ORDER BY
 	branch_code,
 	calculated_year
 
--- following shows only branches that had decreaase of average_pay during all time
+-- following shows only branches that had decrease of average_pay during all time
 SELECT
 	branch_name,
 	is_lower

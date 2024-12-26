@@ -58,6 +58,7 @@ CREATE VIEW IF NOT EXISTS cz_avg_pay AS
 /*
  * 3. Join of cz_avg_pay and cz_price_by_years and create table
  */
+
 		
 CREATE OR REPLACE TABLE t_david_heczko_project_SQL_primary_final AS 
 	SELECT
@@ -65,7 +66,7 @@ CREATE OR REPLACE TABLE t_david_heczko_project_SQL_primary_final AS
 		round(cap.avg_pay,2) AS avg_pay,
 		cap.industry_branch_code AS branch_code,
 		cap.name AS branch_name,
-		cpby.provision_name AS parovision_name,
+		cpby.provision_name AS provision_name,
 		cpby.provision_unit AS provision_unit,
 		cpby.avg_price AS avg_price
 	FROM cz_avg_pay cap

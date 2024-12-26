@@ -17,11 +17,15 @@ Výstupem jsou tedy SQL scripty, které:
 ### Seznam výstupvých scriptů
     1. Primary_table.sql -- script který vytváří tabulku s relevantními daty ohledně mezd a cen potravin ve společných letech.
     2. Secondary_table.sql -- script který vytváří doplňkovou tabulku s daty ohledně HDP, GINI a populace v evropských státech.
-
-
+    3. project4_SQL_question_1.sql 
+    4. project4_SQL_question_2.sql 	
+    5. project4_SQL_question_3.sql 
+    6. project4_SQL_question_4.sql
+    7. project4_SQL_question_5.sql
+ 
 ## Průběh
 
-### Tvorba t_david_heczko_SQL_primary_final
+### 1. Tvorba t_david_heczko_SQL_primary_final
 Nejprve jsem zobrazil pohled pro mzdy na základě czechia-payroll použitím SELECT *.
 K tomu jsem navázal použitím JOIN data ohledně názvů odvětví, typu počítání, typu hodnoty.
 Poté jsem vytvořil pohled pro ceny potravin. K tomu jsem navázal použitím join data ohledně názvu potravin, měny a jednotek.
@@ -35,4 +39,16 @@ Na základě tohoto problému, jsem předělal původní script následovně:
   4.z každého SELECu jsem vytvořil VIEW
   5.Obě VIEW jsem následné spojil skrze LEFT JOIN, kde jsem jednotlivá data spojoval za použití GROUP BY na počítaných letech, průměrných mzdách, názvu odvětví, názvu položek potravin, množství potravin, průměrnou cenu potravin.
 
- 
+### 2. Tvorba t_david_heczko_SQL_secondary_final
+Nejprve jsem vytvořil pohled spojující metodou LEFT JOIN tabulky economies a countries, a zobrazující data ohledně roku,
+zemí, populace, GDP a GINI hodnot. Pomocí klauzule WHERE jsem vyfiltroval pouze země Evropy a období mezi lety 2006 a 2018.
+Následně jsem klauzulí CREATE TABLE vytvořil z tohoto pohledu tabulku t_david_heczko_project_SQL_secondary_final.sql.
+
+### 3. Tvorba pohledů
+Pohledy jsem vytvářel do separátních scriptů, pro každou otázku zvlášť. Při psaní druhého scriptu jsem zjistil,
+že tablukla Primary obsahuje hodnoty value pro období po 8 měsících namísto celého roku.
+Problém jsem opravil funkcí avg na value a klauzulí GROUP BY.
+
+## Odpovědi na výzkumné otázky
+### 1. Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
+
