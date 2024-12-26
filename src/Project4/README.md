@@ -55,20 +55,24 @@ Podle dostupných dat je viditelé, že mzy né vždy rostly.
 Ve specifických odvětvích (viz. detail níže) nastal pokles průměrných mezd oproti předchozímu roku v letech 2009, 2010, 2011, 2013, 2014, 2015 a 2016.
 Z dat je také zřejmé, že v roce 2013 došlo k hromadnému poklesu průměrných mezd v mnoha odvětvích.
 Detail pro jednotlivé zasažené obory:
+
  a) **2009:**
  - Zemědělství, lesnictví, rybářství
  - Těžba a dobývání
  - Ubytování, stravování a pohostinství
  - Činnosti v oblasti nemovitostí
+   
  b) **2010:**
 - Profesní, vědecké a technické činnosti
 - Veřejná správa a obrana; povinné sociální zabezpečení
 - Vzdělávání
+  
  c) **2011:**
 - Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
 - Doprava a skladování
 - Ubytování, stravování a pohostinství
 - Veřejná správa a obrana; povinné sociální zabezpečení
+  
  d) **2013:**
 - Těžba a dobývání
 - Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
@@ -81,10 +85,13 @@ Detail pro jednotlivé zasažené obory:
 - Profesní, vědecké a technické činnosti
 - Administrativní a podpůrné činnosti
 - Kulturní, zábavní a rekreační činnosti
+  
  e) **2014:**
 - Těžba a dobývání
+  
  f) **2015:**
 - Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
+  
  g) **2016:**
 - Těžba a dobývání
 
