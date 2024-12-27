@@ -49,6 +49,23 @@ Pohledy jsem vytvářel do separátních scriptů, pro každou otázku zvlášť
 že tablukla Primary obsahuje hodnoty value pro období po 8 měsících namísto celého roku.
 Problém jsem opravil funkcí avg na value a klauzulí GROUP BY.
 
+1.	**Script project4_SQL_question_1**
+Vytvořil jsem VIEW skrze kombinaci SELECT a CASE, kde jsem použil klauzuli ‘lag() OVER‘  a partition by branch_code a zadal podmínku, kde pokud je předchozí hodnota menší, označí se řádek jako ´yes´ v novém sloupci is_lower.
+Na základě vytvořeného VIEW, jsem pracoval se dvěma klauzulemi SELECT.  V prvním SELECTu vidíme odvětví a roky, ve kterých klesala průměrná mzda. Ve druhém SELECTu vidíme jen informace, jestli průměrná mzda klesala či nikoliv.
+
+2.	**Script project4_SQL_question_2**
+Použil jsem klauzuli SELECT a funkce avg() na avg_pay, pro zobrazení průměrných platů skrze všechna odvětví. Dále jsem podělil průměrný plat na daný rok s průměrnou cenou potraviny abychom získali množství potraviny, kterou lze koupit za průměrný plat.
+Na základě klauzule CASE jsem doplnil jednotky do sloupce unit_per_pay na základě vyhledání str ve sloupci provision_unit.
+Dále jsem do klauzule WHERE zadal takové podmínky, aby se zobrazily jenom hodnoty v letech 2006 a 2018, a jen hodnoty které obsahují slova mléko a chléb.
+
+3.	**Script project4_SQL_question_3**
+V prvním kroku jsem vytvořil za použití funkce SELECT pohled, který zobrazoval jen roky, kategorii potravin, počítanou jednotku a průměrnou cenu za jednotlivé roky.
+Bylo potřeba použít GROUP BY na kategorii potravin aby se zobrazovaly data bez duplicit, které vznikly díky spojení tabulek price a payroll.
+V druhém kroku jsem ze selekce vytvořil pohled a použil funkci lag() OVER, která má za úkol vytvořit sloupec pervious_price vedle počítaných let. Tedy postupuje po jednotlivých letech a připisuje hodnotu předchozího roku. Pro zobrazení prvních hodnot v nezměněné a “nenullové“ hodnotě bylo zapotřebí použít klauzuli ifnull().
+Ve třetím kroku jsem vytvořil pohled počítající precentuální hodnotu rozdílu ceny a předchozí ceny na daném roku.
+Čtvrtý pohled zobrazuje data ohledně průměrného nárůstu či poklesu cen napříč počítanými lety pro každou potravinu zvlášť.
+
+
 ## Odpovědi na výzkumné otázky
 ### 1. Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
 Podle dostupných dat je viditelé, že mzy né vždy rostly.
