@@ -65,6 +65,13 @@ V druhém kroku jsem ze selekce vytvořil pohled a použil funkci lag() OVER, kt
 Ve třetím kroku jsem vytvořil pohled počítající precentuální hodnotu rozdílu ceny a předchozí ceny na daném roku.
 Čtvrtý pohled zobrazuje data ohledně průměrného nárůstu či poklesu cen napříč počítanými lety pro každou potravinu zvlášť.
 
+4.	**Script project4_SQL_question_4** -
+V prvním kroku jsem vytvořil pohled pay_comparation, kde ve sloupci pervious_avg_pay je možné vidět hodnotu průměrné mzdy předchozího období pro dané odvětví.
+Ve druhém kroku jsem vytvořil pohled pay_percentage_trend, který zobrazuje procentuální rozdíl mezd oproti předchozímu období.
+Ve třetím kroku jsem vytvořil pohled overall_price_pay_trend, který spojuje průměrné hodnoty z pohledu pay_percentage_trend (v tomto scriptu),
+průmerné hodnoty z pohledu price_precentage_trend (pohled vytvořen ve scriptu project4_SQL_question_3). Data jsou seskupena skrze roky, ve kterých byly hodnoty počítány.
+Vytvořením 4. pohledu price_pay_growth_comparation jsem dosáhl zobrazení tabulky, která obsahuje porovnání výsledných hodnot.
+
 
 ## Odpovědi na výzkumné otázky
 ### 1. Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
@@ -123,5 +130,10 @@ Zato v roce 2018 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
 ### 3. Která kategorie potravin zdražuje nejpomaleji (je u ní nejnižší percentuální meziroční nárůst)?
 V datech v pohledu price_precentage_trend_final je zřejmé, že nejpomalejší zdražování probíhalo u Žlutých banánů, kde průměrné meziroční zdražení bylo 0,75%.
 Další zajímavou informací, která je z tabulky jasně viditelná je, že né všechny potraviny průměrně zdražovaly. Krystalový cukr a rajská jablka měly zlevňující tendenci, a to u ckuru o 1,77% a u rajských jablek o 0,68%.
+
+### 4. Existuje rok, ve kterém byl meziroční nárůst cen potravin výrazně vyšší než růst mezd (větší než 10 %)?
+Po srovnání meziročního průměrného nárůstu (year on year, yoy) mezd všech odvětví, a průměrného yoy nárůstu cen všech potravin vyplývá,
+že všeobecně potraviny nezdrahly v daném roce o více než 10%.
+Největší rozdíl mezi růstem průmerné mzdy a průměrné ceny potravin nastal v roce 2013, kdy ceny potravin vzrostly o 6,79% oproti růstu průměrné mzdy.
 
 
