@@ -49,6 +49,91 @@ Pohledy jsem vytvářel do separátních scriptů, pro každou otázku zvlášť
 že tablukla Primary obsahuje hodnoty value pro období po 8 měsících namísto celého roku.
 Problém jsem opravil funkcí avg na value a klauzulí GROUP BY.
 
+1.	**Script project4_SQL_question_1** - 
+Vytvořil jsem VIEW skrze kombinaci SELECT a CASE, kde jsem použil klauzuli ‘lag() OVER‘  a partition by branch_code a zadal podmínku, kde pokud je předchozí hodnota menší, označí se řádek jako ´yes´ v novém sloupci is_lower.
+Na základě vytvořeného VIEW, jsem pracoval se dvěma klauzulemi SELECT.  V prvním SELECTu vidíme odvětví a roky, ve kterých klesala průměrná mzda. Ve druhém SELECTu vidíme jen informace, jestli průměrná mzda klesala či nikoliv.
+
+2.	**Script project4_SQL_question_2** - 
+Použil jsem klauzuli SELECT a funkce avg() na avg_pay, pro zobrazení průměrných platů skrze všechna odvětví. Dále jsem podělil průměrný plat na daný rok s průměrnou cenou potraviny abychom získali množství potraviny, kterou lze koupit za průměrný plat.
+Na základě klauzule CASE jsem doplnil jednotky do sloupce unit_per_pay na základě vyhledání str ve sloupci provision_unit.
+Dále jsem do klauzule WHERE zadal takové podmínky, aby se zobrazily jenom hodnoty v letech 2006 a 2018, a jen hodnoty které obsahují slova mléko a chléb.
+
+3.	**Script project4_SQL_question_3** - 
+V prvním kroku jsem vytvořil za použití funkce SELECT pohled, který zobrazoval jen roky, kategorii potravin, počítanou jednotku a průměrnou cenu za jednotlivé roky.
+Bylo potřeba použít GROUP BY na kategorii potravin aby se zobrazovaly data bez duplicit, které vznikly díky spojení tabulek price a payroll.
+V druhém kroku jsem ze selekce vytvořil pohled a použil funkci lag() OVER, která má za úkol vytvořit sloupec pervious_price vedle počítaných let. Tedy postupuje po jednotlivých letech a připisuje hodnotu předchozího roku. Pro zobrazení prvních hodnot v nezměněné a “nenullové“ hodnotě bylo zapotřebí použít klauzuli ifnull().
+Ve třetím kroku jsem vytvořil pohled počítající precentuální hodnotu rozdílu ceny a předchozí ceny na daném roku.
+Čtvrtý pohled zobrazuje data ohledně průměrného nárůstu či poklesu cen napříč počítanými lety pro každou potravinu zvlášť.
+
+4.	**Script project4_SQL_question_4** -
+V prvním kroku jsem vytvořil pohled pay_comparation, kde ve sloupci pervious_avg_pay je možné vidět hodnotu průměrné mzdy předchozího období pro dané odvětví.
+Ve druhém kroku jsem vytvořil pohled pay_percentage_trend, který zobrazuje procentuální rozdíl mezd oproti předchozímu období.
+Ve třetím kroku jsem vytvořil pohled overall_price_pay_trend, který spojuje průměrné hodnoty z pohledu pay_percentage_trend (v tomto scriptu),
+průmerné hodnoty z pohledu price_precentage_trend (pohled vytvořen ve scriptu project4_SQL_question_3). Data jsou seskupena skrze roky, ve kterých byly hodnoty počítány.
+Vytvořením 4. pohledu price_pay_growth_comparation jsem dosáhl zobrazení tabulky, která obsahuje porovnání výsledných hodnot.
+
+
 ## Odpovědi na výzkumné otázky
 ### 1. Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
+Podle dostupných dat je viditelé, že mzy né vždy rostly.
+Ve specifických odvětvích (viz. detail níže) nastal pokles průměrných mezd oproti předchozímu roku v letech 2009, 2010, 2011, 2013, 2014, 2015 a 2016.
+Z dat je také zřejmé, že v roce 2013 došlo k hromadnému poklesu průměrných mezd v mnoha odvětvích.
+Detail pro jednotlivé zasažené obory:
+
+ a) **2009:**
+ - Zemědělství, lesnictví, rybářství
+ - Těžba a dobývání
+ - Ubytování, stravování a pohostinství
+ - Činnosti v oblasti nemovitostí
+   
+ b) **2010:**
+- Profesní, vědecké a technické činnosti
+- Veřejná správa a obrana; povinné sociální zabezpečení
+- Vzdělávání
+  
+ c) **2011:**
+- Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
+- Doprava a skladování
+- Ubytování, stravování a pohostinství
+- Veřejná správa a obrana; povinné sociální zabezpečení
+  
+ d) **2013:**
+- Těžba a dobývání
+- Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
+- Zásobování vodou; činnosti související s odpady a sanacemi
+- Stavebnictví
+- Velkoobchod a maloobchod; opravy a údržba motorových vozidel
+- Informační a komunikační činnosti
+- Peněžnictví a pojišťovnictví
+- Činnosti v oblasti nemovitostí
+- Profesní, vědecké a technické činnosti
+- Administrativní a podpůrné činnosti
+- Kulturní, zábavní a rekreační činnosti
+  
+ e) **2014:**
+- Těžba a dobývání
+  
+ f) **2015:**
+- Výroba a rozvod elektřiny, plynu, tepla a klimatiz. vzduchu
+  
+ g) **2016:**
+- Těžba a dobývání
+
+### 2. Kolik je možné si koupit litrů mléka a kilogramů chleba za první a poslední srovnatelné období v dostupných datech cen a mezd?
+Z dostupných dat vyplývá, že v roce 2006 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+    a) 919 kilogramů chleba
+    b) 1026 litrů mléka
+Zato v roce 2018 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+    a) 1051 kilogramů chleba, což je o 132 kilogramů více než v roce 2006
+    b) 1285 litrů mléka, což je o 256 litrů více než v roce 2006
+
+### 3. Která kategorie potravin zdražuje nejpomaleji (je u ní nejnižší percentuální meziroční nárůst)?
+V datech v pohledu price_precentage_trend_final je zřejmé, že nejpomalejší zdražování probíhalo u Žlutých banánů, kde průměrné meziroční zdražení bylo 0,75%.
+Další zajímavou informací, která je z tabulky jasně viditelná je, že né všechny potraviny průměrně zdražovaly. Krystalový cukr a rajská jablka měly zlevňující tendenci, a to u ckuru o 1,77% a u rajských jablek o 0,68%.
+
+### 4. Existuje rok, ve kterém byl meziroční nárůst cen potravin výrazně vyšší než růst mezd (větší než 10 %)?
+Po srovnání meziročního průměrného nárůstu (year on year, yoy) mezd všech odvětví, a průměrného yoy nárůstu cen všech potravin vyplývá,
+že všeobecně potraviny nezdrahly v daném roce o více než 10%.
+Největší rozdíl mezi růstem průmerné mzdy a průměrné ceny potravin nastal v roce 2013, kdy ceny potravin vzrostly o 6,79% oproti růstu průměrné mzdy.
+
 
