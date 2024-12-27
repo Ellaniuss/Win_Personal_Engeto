@@ -113,12 +113,15 @@ Detail pro jednotlivé zasažené obory:
 - Těžba a dobývání
 
 ### 2. Kolik je možné si koupit litrů mléka a kilogramů chleba za první a poslední srovnatelné období v dostupných datech cen a mezd?
-  Z dostupných dat vyplývá, že v roce 2006 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
-      a) 919 kilogramů chleba
-      b) 1026 litrů mléka
-  Zato v roce 2018 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
-      a) 1051 kilogramů chleba, což je o 132 kilogramů více než v roce 2006
-      b) 1285 litrů mléka, což je o 256 litrů více než v roce 2006
+Z dostupných dat vyplývá, že v roce 2006 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+    a) 919 kilogramů chleba
+    b) 1026 litrů mléka
+Zato v roce 2018 bylo možné, za průmernou mzdu napříč odvětvími, koupit:
+    a) 1051 kilogramů chleba, což je o 132 kilogramů více než v roce 2006
+    b) 1285 litrů mléka, což je o 256 litrů více než v roce 2006
 
+### 3. Která kategorie potravin zdražuje nejpomaleji (je u ní nejnižší percentuální meziroční nárůst)?
+V datech v pohledu price_precentage_trend_final je zřejmé, že nejpomalejší zdražování probíhalo u Žlutých banánů, kde průměrné meziroční zdražení bylo 0,75%.
+Další zajímavou informací, která je z tabulky jasně viditelná je, že né všechny potraviny průměrně zdražovaly. Krystalový cukr a rajská jablka měly zlevňující tendenci, a to u ckuru o 1,77% a u rajských jablek o 0,68%.
 
 
