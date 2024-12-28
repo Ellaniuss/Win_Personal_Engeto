@@ -11,7 +11,8 @@ Výstupem jsou tedy SQL scripty, které:
     2. Kolik je možné si koupit litrů mléka a kilogramů chleba za první a poslední srovnatelné období v dostupných datech cen a mezd ?
     3. Která kategorie potravin zdražuje nejpomaleji (je u ní nejmenší procentuální roční nárust)?
     4. Existuje rok, ve kterém byl meziroční nárust cen potravin výrazně vyšší než růst cen (větší než 10%)?
-    5. Má výška HDP vliv na změny ve mzdách a cenách potravin ? Neboli, pokud HDP vzroste výrazněji v jednom  roce, projeví se to na cenách potravin či mzdách ve stejném nebo následujícím roce výraznějším růstem ?
+    5. Má výška HDP vliv na změny ve mzdách a cenách potravin ? 
+       Neboli, pokud HDP vzroste výrazněji v jednom  roce, projeví se to na cenách potravin či mzdách ve stejném nebo následujícím roce výraznějším růstem ?
 
 
 ### Seznam výstupvých scriptů
