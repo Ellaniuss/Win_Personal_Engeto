@@ -58,3 +58,5 @@ CREATE VIEW price_percentage_trend_final AS
 		
 SELECT *
 FROM price_percentage_trend_final pptf
+
+
