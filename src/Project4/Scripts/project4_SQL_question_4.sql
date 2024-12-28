@@ -7,7 +7,7 @@ CREATE VIEW pay_comparation AS
 		branch_code,
 		branch_name,
 		avg_pay,
-		ifnull(lag(avg_pay) OVER (PARTITION BY branch_code ORDER BY calculated_year),avg_pay) AS pervious_avg_pay 
+		ifnull(lag(avg_pay) OVER (PARTITION BY branch_code ORDER BY calculated_year),avg_pay) AS previous_avg_pay 
 	FROM t_david_heczko_project_sql_primary_final t_prim
 	GROUP BY
 		calculated_year,
@@ -28,8 +28,8 @@ CREATE VIEW pay_percentage_trend AS
 		branch_code,
 		branch_name,
 		avg_pay,
-		pervious_avg_pay,
-		round(((avg_pay - pervious_avg_pay)/pervious_avg_pay)* 100, 2) AS increase_pay
+		previous_avg_pay,
+		round(((avg_pay - previous_avg_pay)/previous_avg_pay)* 100, 2) AS increase_pay
 	FROM pay_comparation pc
 	
 	
