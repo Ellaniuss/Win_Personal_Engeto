@@ -20,41 +20,41 @@ CREATE VIEW provision_prices_by_year AS
 /*
  * 2. creating view that shows prices by year and prices from pervious year to compare
  */
-		
+
 CREATE VIEW provision_prices_comparation AS 		
 	SELECT
 		calculated_year,
 		provision_name,
 		avg_price,
-		ifnull(lag(avg_price) OVER (PARTITION BY provision_name ORDER BY calculated_year), avg_price) AS pervious_price
+		ifnull(lag(avg_price) OVER (PARTITION BY provision_name ORDER BY calculated_year), avg_price) AS previous_price
 	FROM provision_prices_by_year ppby
 
 	
 /*
  * 3. creating view that shows precentage increase/decrease between years per provision type
  */	
-CREATE VIEW price_precentage_trend AS 
+CREATE VIEW price_percentage_trend AS 
 	SELECT
 		calculated_year,
 		provision_name,
 		avg_price,
-		pervious_price,
-		round(((avg_price - pervious_price) / pervious_price) * 100,2) AS increase_percentage
+		previous_price,
+		round(((avg_price - previous_price) / previous_price) * 100,2) AS increase_percentage
 	FROM provision_prices_comparation ppc
 	
 
 /*
  * 4. creating view that shows overall precentage increase/decrease of provision prices 
  */	
-CREATE VIEW price_precentage_trend_final AS
+CREATE VIEW price_percentage_trend_final AS
 	SELECT
 		provision_name,
 		concat(round(avg(increase_percentage),2), ' %') AS percentage_trend
-	FROM price_precentage_trend ppt
+	FROM price_percentage_trend ppt
 	GROUP BY
 		provision_name
 	ORDER BY
 		round(avg(increase_percentage),2)
 		
 SELECT *
-FROM price_precentage_trend_final pptf
+FROM price_percentage_trend_final pptf
