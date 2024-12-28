@@ -1,5 +1,5 @@
 /*
- * 1. Created view for relevant data.
+ * 1. Created select for relevant data.
  */
 SELECT
 	e.`year`,

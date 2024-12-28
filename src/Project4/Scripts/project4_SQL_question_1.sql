@@ -41,8 +41,8 @@ GROUP BY
 	calculated_year,
 	is_lower
 ORDER BY
-	branch_code,
-	calculated_year
+	calculated_year ASC,
+	branch_code
 
 -- following shows only branches that had decrease of average_pay during all time
 SELECT
