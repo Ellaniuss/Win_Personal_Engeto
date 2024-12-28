@@ -23,7 +23,7 @@ ORDER BY
  */
 CREATE TABLE t_david_heczko_project_SQL_secondary_final AS 
 	SELECT
-		e.`year`,
+		e.`year` AS year_eu,
 		e.country,
 		e.population,
 		round(e.GDP) AS GDP,
@@ -38,3 +38,4 @@ CREATE TABLE t_david_heczko_project_SQL_secondary_final AS
 	ORDER BY 
 		e.country,
 		e.`year`
+		
