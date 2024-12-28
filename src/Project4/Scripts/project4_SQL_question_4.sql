@@ -44,7 +44,7 @@ CREATE VIEW overall_price_pay_trend AS
 		round(avg(ppt.increase_pay),2) AS overall_pay_avg_increase,
 		round(avg(ppt2.increase_percentage),2) AS overall_price_avg_increase
 	FROM pay_percentage_trend ppt
-	JOIN price_precentage_trend ppt2
+	JOIN price_percentage_trend ppt2
 		ON ppt.calculated_year = ppt2.calculated_year
 	GROUP BY
 		calculated_year
