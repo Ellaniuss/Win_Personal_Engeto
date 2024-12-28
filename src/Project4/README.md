@@ -73,6 +73,12 @@ Ve třetím kroku jsem vytvořil pohled overall_price_pay_trend, který spojuje 
 průmerné hodnoty z pohledu price_precentage_trend (pohled vytvořen ve scriptu project4_SQL_question_3). Data jsou seskupena skrze roky, ve kterých byly hodnoty počítány.
 Vytvořením 4. pohledu price_pay_growth_comparation jsem dosáhl zobrazení tabulky, která obsahuje porovnání výsledných hodnot.
 
+5.	**Script project4_SQL_question_5** -
+Nejprve jsem vytvořil pohled cz_hdp z tabulky t_david_heczko_project_sql_secondary_final, ve kterém jsem zobrazil data o HDP v Česku v letech 2006 až 2018. Následně jsem musel vytvořit další dva pohledy k průměrným platům (avg_pay_percentage_trend)  a cenám potravin (avg_price_percentage_trend), jelikož v předchozích vytvořených pohledech byly data rozděleny do jednotlivých kategorií, a chyběly výsledky na celkové průměrné hodnoty za daný rok.
+Nakonec jsem vytvořil pohled hdp_price_pay_yoy spojením všech pohledů na scriptu,  kde je možno vidět veškerá data ohledně HDP růstu, růstu platů a cen potravin.
+Script na konci obsahuje klauzuli SELECT, ve které jsem hledal odpověď na 5. otázku.
+
+
 
 ## Odpovědi na výzkumné otázky
 ### 1. Rostou v průběhu let mzdy ve všech odvětvích, nebo v některých klesají?
@@ -136,5 +142,26 @@ Další zajímavou informací, která je z tabulky jasně viditelná je, že né
 Po srovnání meziročního průměrného nárůstu (year on year, yoy) mezd všech odvětví, a průměrného yoy nárůstu cen všech potravin vyplývá,
 že všeobecně potraviny nezdrahly v daném roce o více než 10%.
 Největší rozdíl mezi růstem průmerné mzdy a průměrné ceny potravin nastal v roce 2013, kdy ceny potravin vzrostly o 6,79% oproti růstu průměrné mzdy.
+
+### 5.	Má výška HDP vliv na změny ve mzdách a cenách potravin? Neboli, pokud HDP vzroste výrazněji v jednom roce, projeví se to na cenách potravin či mzdách ve stejném nebo násdujícím roce výraznějším růstem?
+Z dostupných dat reflektujících změny HDP, průměrných platů a průměrné ceny potravin, nelze jasně vyvodit závěr, že růst HDP má vliv na růst platů a cen potravin.
+Toto tvrzení vyplývá z následujících poznatků:
+-	V roce 2007 vzrostlo HDP o 5.57 % oproti předchozímu roku.
+    Ve stejném roce vzrostly platy o 6.91 % a potraviny zdražily o 9.25 %.
+ 	Všechny kategorie tedy rostly. V následujícím roce platy a ceny potravin dále prudce rostly, a to u platů o 7.08 % a u cen potravin o 8.91 %.
+
+-	V roce 2009 HDP kleslo o 4.66 %. Platy avšak vzrostly o 2.84 %, kdežto potraviny zlevnily o 6.58%.
+    Zde vidíme, že i když HDP klesalo a potraviny zlevňovaly, hodnota průměrných platů rostla.
+ 	V následujícím roce platy dále rostly o 2.15 % ale potraviny zdražily o 1.52 %.
+
+-	V roce 2015 HDP opět vzrostlo o 5.39%. Platy nicméně vzrostly jen o 2.9 % a potraviny zlevnily o 0.67 %.
+    Zde zase naopak vidíme, že oproti roku 2007, kdy HDP také rostlo o více než 5 %, platy ani ceny potravin nerostly o podobná procenta jako v roce 2007, ba dokonce ceny potravin šly opačnou tendencí.
+ 	V následujícím roce platy nadále rostly, a to o 3.94 %, kdežto ceny potravin znova klesaly o -1.40 %.
+
+-	V roce 2017 došlo opět o nárůst HDP o více než 5 % a platy a ceny potravin vzrostly také o více než 5 %, konkrétně platy o 6.40 % a ceny potravin o 7.06 %.
+    V následujícím roce platy prudce rostly a to až o 7.88 % kdežto potraviny vzrostly jen 2.41 %.
+
+Z výpisu vyplývá, že nelze sledovat opakující se trend ani u platů ani u cen potravin. 
+Data jsou různorodá a souvislosti nejsou přímě úměrné.
 
 
