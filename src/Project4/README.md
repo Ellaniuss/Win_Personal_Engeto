@@ -16,6 +16,8 @@ Výstupem jsou tedy SQL scripty, které:
 
 
 ### Seznam výstupvých scriptů
+**Scripty jsou ve složce Scripts v repositáři**
+
     1. Primary_table.sql -- script který vytváří tabulku s relevantními daty ohledně mezd a cen potravin ve společných letech.
     2. Secondary_table.sql -- script který vytváří doplňkovou tabulku s daty ohledně HDP, GINI a populace v evropských státech.
     3. project4_SQL_question_1.sql 
